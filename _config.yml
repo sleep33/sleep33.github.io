@@ -14,7 +14,7 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 # Import the favicon
-favicon: /images/favicon.ico
+favicon: /images/favicon.png
 
 title: Sleep33 # the main title
 
