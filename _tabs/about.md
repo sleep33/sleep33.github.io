@@ -3,9 +3,6 @@
 icon: fas fa-info-circle
 order: 4
 ---
-
-> Welcome to my cybersecurity journey! {: .prompt-tip }
-
 # ![whois logo](https://who.is/static/images/whois-logo.svg)
 
 ## OrgName: Yuval!
