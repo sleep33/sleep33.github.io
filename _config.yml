@@ -1,11 +1,5 @@
 # The Site Configuration
-menu:
-  - title: "TryHackMe"
-    url: /categories/tryhackme/
-    icon: fas fa-flag
-  - title: "HackTheBox"
-    url: /categories/hackthebox/
-    icon: fas fa-skull-crossbones
+
 # Import the theme
 theme: jekyll-theme-chirpy
 
