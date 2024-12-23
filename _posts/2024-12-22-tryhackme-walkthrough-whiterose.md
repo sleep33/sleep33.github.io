@@ -3,7 +3,7 @@ title: "TryHackMe - CyprusBank Walkthrough"
 date: 2024-12-22
 categories: [TryHackMe]
 tags: [SSTI, RCE, Privilege Escalation]
-image: assets/img/whiterose-banner.jpg
+image: assets/images/whiterose-banner.jpg
 ---
 
 # TryHackMe - CyprusBank Walkthrough
