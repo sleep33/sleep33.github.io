@@ -6,7 +6,7 @@ tags: [SSTI, RCE, Privilege Escalation]
 image: assets/images/whiterose-banner.jpg
 ---
 
-# TryHackMe - CyprusBank Walkthrough
+# TryHackMe - Whiterose Walkthrough
 
 ---
 
