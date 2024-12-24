@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe - Whiterose Walkthrough"
-date: 2024-12-22
+date: 2024-12-12
 categories: [TryHackMe]
 tags: [SSTI, RCE, Privilege Escalation]
 image: assets/images/thm-cover/whiterose-Cover.jpg

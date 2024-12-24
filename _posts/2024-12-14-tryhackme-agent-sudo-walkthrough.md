@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe - Agent Sudo CTF Walkthrough"
-date: 2024-12-25
+date: 2024-12-14
 categories: [TryHackMe]
 tags: [CTF, FTP, Steganography, Privilege Escalation]
 image: assets/images/thm-cover/agent-sudo_Cover.jpg
