@@ -157,5 +157,4 @@ sleep33@THM:~$ cat root.txt
 ```plaintext
 THM{4nd_uR_p4ck4g3s}
 ```
-
 ---
