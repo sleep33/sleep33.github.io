@@ -3,7 +3,7 @@ title: "TryHackMe - Whiterose Walkthrough"
 date: 2024-12-12
 categories: [TryHackMe]
 tags: [CTF, SSTI, RCE, Privilege Escalation]
-image: assets/images/whiterose-Cover.jpg
+image: assets/images/thm-cover/whiterose-Cover.jpg
 ---
 
 # TryHackMe - Whiterose Walkthrough
