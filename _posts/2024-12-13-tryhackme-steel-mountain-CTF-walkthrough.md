@@ -2,7 +2,7 @@
 title: "TryHackMe - Steel Mountain Walkthrough"
 date: 2024-12-13
 categories: [TryHackMe]
-tags: [RCE, Metasploit, Privilege Escalation, CVE-2014-6287]
+tags: [CTF, RCE, Metasploit, Privilege Escalation, CVE-2014-6287]
 image: assets/images/thm-cover/steel-mountain-Cover.jpg
 ---
 
