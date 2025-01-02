@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe - Mr Robot CTF Walkthrough"
-date: 2024-12-15
+date: 2024-12-16
 categories: [TryHackMe]
 tags: [CTF, WordPress, Privilege Escalation, SUID, Reverse Shell]
 image: assets/images/thm-cover/mr-robot-Cover.jpg
