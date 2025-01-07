@@ -1,4 +1,3 @@
-
 ---
 title: "TryHackMe - Kenobi CTF Walkthrough"
 date: 2024-12-18
