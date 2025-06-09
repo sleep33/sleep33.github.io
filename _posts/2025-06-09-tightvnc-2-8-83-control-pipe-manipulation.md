@@ -4,8 +4,7 @@ date: 2025-06-09
 categories: [Cyber]
 tags: [vulnerability, exploit, offensive-security]
 layout: post
-image:
-  path: assets/images/post-cover/tightvnc-exploit.png
+image: assets/images/post-cover/tightvnc-exploit.png
 
 ## 🔍 Summary
 
