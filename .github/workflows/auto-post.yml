@@ -1,0 +1,32 @@
+name: Auto Cyber Post
+
+on:
+  schedule:
+    - cron: '0 8 * * *' 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install rss-parser fs-extra node-fetch dayjs dotenv
+
+      - name: Run cyber post generator
+        run: node tools/auto-cyber-posting/generate-cyber-post.js
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+
+      - name: Commit & push
+        run: |
+          git config user.name "sleep33-bot"
+          git config user.email "bot@sleep33.dev"
+          git add _posts
+          git commit -m "🛡️ Auto CVE post"
+          git push

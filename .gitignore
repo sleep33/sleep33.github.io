@@ -25,3 +25,6 @@ package-lock.json
 # Misc
 _sass/dist
 assets/js/dist
+
+# HuggingFace token file
+tools/auto-cyber-posting/.env
