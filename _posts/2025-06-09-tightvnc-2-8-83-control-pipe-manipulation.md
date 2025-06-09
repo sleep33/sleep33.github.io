@@ -5,8 +5,7 @@ categories: [Cyber]
 tags: [vulnerability, exploit, offensive-security]
 layout: post
 image:
-  path: ./assets/images/post-cover/default-image.png
----
+  path: assets/images/post-cover/tightvnc-exploit.png
 
 ## 🔍 Summary
 
