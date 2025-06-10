@@ -1,7 +1,7 @@
 ---
 title: "[remote] Grandstream GSD3710 1.0.11.13 - Stack Overflow"
 date: 2025-06-05
-categories: [Cyber Blog]
+categories: [Hacking Blog]
 tags: [vulnerability, exploit, offensive-security, Grandstream]
 layout: post
 image:

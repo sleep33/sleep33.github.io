@@ -1,7 +1,7 @@
 ---
 title: "TightVNC 2.8.83 - Control Pipe Manipulation"
 date: 2025-06-09
-categories: [Cyber Blog]  # Updated category to 'Cyber Blog'
+categories: [Hacking Blog]  
 tags: [vulnerability, exploit, offensive-security, vnc]
 layout: post
 image:
