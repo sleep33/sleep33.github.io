@@ -1,5 +1,5 @@
 ---
-title: "[local] TightVNC 2.8.83 - Control Pipe Manipulation"
+title: "TightVNC 2.8.83 - Control Pipe Manipulation"
 date: 2025-06-09
 categories: [Cyber Blog]  # Updated category to 'Cyber Blog'
 tags: [vulnerability, exploit, offensive-security]
@@ -8,11 +8,11 @@ image:
   path: ./assets/images/post-cover/tightvnc-exploit.png
 ---
 
-## 🔍 Summary
+## Summary
 
 TightVNC 2.8.83 - Control Pipe Manipulation
 
-## 🧠 Technical Analysis
+## Technical Analysis
 
 ```markdown
 # Technical Executive Summary

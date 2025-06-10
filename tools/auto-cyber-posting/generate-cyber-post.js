@@ -1,117 +1,169 @@
-import Parser from 'rss-parser'
 import fs from 'fs-extra'
+import fetch from 'node-fetch'
+import Parser from 'rss-parser'
 import dayjs from 'dayjs'
 import { OpenAI } from 'openai'
 import 'dotenv/config'
 
 const parser = new Parser()
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
+const IMAGE_PATH = 'assets/images/post-cover'
 
-const RSS_URL = 'https://www.cisa.gov/news.xml'
-const IMAGE_URL = 'https://source.unsplash.com/featured/?cybersecurity,hacking'
+const RSS_FEEDS = [
+  'https://www.exploit-db.com/rss.xml',
+  'https://packetstormsecurity.com/files/feed.xml',
+  'https://www.security-database.com/feed.php?type=xml'
+]
 
-// Step 1 – Fetch latest item
-const fetchLatestItem = async () => {
-  const feed = await parser.parseURL(RSS_URL)
-  const item = feed.items.find(i => i.title && i.link)
+// Step 1 – Fetch the most recent vulnerability from RSS feeds
+const fetchRecentVuln = async () => {
+  const now = dayjs()
+  const maxAgeDays = 30 // Only consider vulnerabilities from the last 30 days
 
-  if (!item) return null
+  for (const url of RSS_FEEDS) {
+    try {
+      const feed = await parser.parseURL(url)
 
-  const title = item.title
-  const summary =
-    item.contentSnippet?.trim() ||
-    `No summary provided by the source for: "${title}".`
+      // We filter out vulnerabilities older than the maxAgeDays (e.g., 30 days)
+      const item = feed.items.find(i => {
+        const pubDate = i.pubDate ? dayjs(i.pubDate) : null
+        const isRecent = pubDate && now.diff(pubDate, 'day') <= maxAgeDays
+        return isRecent
+      })
 
-  return {
-    title,
-    summary,
-    link: item.link
+      if (item) {
+        return {
+          title: item.title.trim(),
+          summary: item.contentSnippet || 'No summary.',
+          link: item.link,
+          date: item.pubDate || now.toISOString()
+        }
+      }
+    } catch (err) {
+      console.warn(`⚠️ Failed to parse ${url}: ${err.message}`)
+    }
+  }
+
+  return null
+}
+
+// Step 2 – Generate AI analysis using GPT-4o
+const askOpenAI = async (text) => {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a senior cybersecurity researcher writing in-depth blog posts for offensive security professionals.'
+        },
+        {
+          role: 'user',
+          content: `
+Analyze this vulnerability headline:
+
+"${text}"
+
+Write:
+- Technical Executive Summary
+- Code example (PoC or bash/curl/python)
+- Offensive security insights (exploitation techniques)
+- Defensive measures
+Return only markdown.
+Ensure the tone is professional and technical.
+`
+        }
+      ],
+      temperature: 0.5,
+      max_tokens: 1000
+    })
+  })
+
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error?.message || 'Unknown error')
+  return data.choices[0].message.content
+}
+
+// Step 3 – Generate a cover image using DALL·E (handling potential errors)
+const generateImage = async (title) => {
+  const prompt = `A professional, detailed cybersecurity illustration based on the topic: "${title}"`
+
+  try {
+    const res = await openai.createImage({
+      prompt: prompt,
+      n: 1,
+      size: '1024x1024'
+    })
+
+    const imageUrl = res.data[0].url
+    const imagePath = `./${IMAGE_PATH}/${title.replace(/[^a-z0-9]+/g, '-')}.png`
+
+    const imageRes = await fetch(imageUrl)
+    const buffer = await imageRes.buffer()
+
+    await fs.outputFile(imagePath, buffer)
+    console.log(`✅ Image saved: ${imagePath}`)
+
+    return imagePath
+  } catch (error) {
+    console.error('❌ Error generating image with DALL·E:', error.message)
+    return './assets/images/post-cover/default-image.png' // Path to a default image if generation fails
   }
 }
 
-// Step 2 – Use OpenAI GPT-4o for analysis
-const generateAIAnalysis = async ({ title, summary, link }) => {
-  const prompt = `
-You are a senior cyber threat intelligence analyst and writer for a leading cybersecurity publication.
+// Step 4 – Write Markdown blog post to _posts directory
+const writePost = async ({ title, summary, link, date }, aiContent, imagePath) => {
+  const cleanDate = dayjs(date).format('YYYY-MM-DD')
+  const slug = `${cleanDate}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  const filename = `../../_posts/${slug}.md`  // Ensure this path is correct
 
-Your task is to write a professional, concise and high-quality blog post about the following headline.
-
-Headline: "${title}"
-
-Short Source Summary: "${summary}"
-
-Generate a clear and structured blog section that includes:
-
-1. **Title:** Professional title of the analysis.
-2. **Executive Summary:** 2–3 sentence summary describing what happened and why it matters.
-3. **Offensive Security Perspective:** How attackers might leverage this event, either technically or through social engineering.
-4. **Defensive Security Recommendations:** Specific steps that organizations should take to mitigate any risks.
-5. **Professional Tone:** Like The Hacker News or Bleeping Computer. Use clear Markdown formatting, headings, and bullet points if needed.
-
-Keep it under 400 words. Do not mention yourself or OpenAI in the response.
-`.trim()
-
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    messages: [
-      { role: 'system', content: 'You are a senior cybersecurity analyst and technical writer.' },
-      { role: 'user', content: prompt }
-    ],
-    temperature: 0.4,
-    top_p: 0.95,
-    presence_penalty: 0.3,
-    max_tokens: 700
-  })
-
-  return response.choices[0].message.content.trim()
-}
-
-
-// Step 3 – Write Markdown blog post
-const writePost = async ({ title, summary, link }, aiAnalysis) => {
-  const date = dayjs().format('YYYY-MM-DD')
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50)
-  const filename = `_posts/${date}-${slug}.md`
-
-  const content = `---
+  // Creating the markdown content to match Chirpy format
+  const markdown = `---
 title: "${title}"
-date: ${date}
-categories: [Cyber]
-tags: [CVE, offensive-security, vulnerabilities]
+date: ${cleanDate}
+categories: [Cyber Blog]  # Updated category to 'Cyber Blog'
+tags: [vulnerability, exploit, offensive-security]
 layout: post
 image:
-  path: ${IMAGE_URL}
+  path: ${imagePath}
 ---
 
-## 🔍 Summary
+## Summary
 
 ${summary}
 
-## 🧠 AI Analysis
+## Technical Analysis
 
-${aiAnalysis}
+${aiContent}
 
-📎 [Read more here](${link})
+📎 [Original Source](${link})
 
 ---
 
-_This article was written by sleep33._
+_This article was written by an experienced cybersecurity researcher (sleep33)._
 `
 
-  await fs.outputFile(filename, content)
-  console.log(`✅ Post saved: ${filename}`)
+  await fs.outputFile(filename, markdown)
+  console.log(`✅ Post created: ${filename}`)
 }
 
-// Step 4 – Main
 const main = async () => {
-  const item = await fetchLatestItem()
-  if (!item) return console.log('⚠ No news item found.')
-
   try {
-    const aiAnalysis = await generateAIAnalysis(item)
-    await writePost(item, aiAnalysis)
+    const vuln = await fetchRecentVuln()
+    if (!vuln) return console.log('⚠️ No vulnerability found in recent feeds.')
+
+    const aiContent = await askOpenAI(`${vuln.title}\n${vuln.summary}`)
+    const imagePath = await generateImage(vuln.title)  // Generate image, with fallback
+    await writePost(vuln, aiContent, imagePath)
   } catch (err) {
-    console.error('❌ OpenAI API failed:', err.message)
+    console.error('❌', err.message)
   }
 }
 
