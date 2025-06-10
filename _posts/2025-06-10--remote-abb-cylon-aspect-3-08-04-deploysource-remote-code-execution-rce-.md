@@ -5,7 +5,7 @@ categories: [Hacking Blog]
 tags: [vulnerability, exploit, offensive-security]
 layout: post
 image:
-  path: ./assets/images/post-cover/ABB-Cylon-Aspect-3.08.04-DeploySource.png
+  path: ./assets/images/post-cover/ABB-Cylon-Aspect-3.08.04 DeploySource.png
 ---
 
 ## Summary
