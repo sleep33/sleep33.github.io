@@ -16,16 +16,19 @@ jobs:
           node-version: 20
 
       - name: Install deps
-        run: npm install rss-parser fs-extra node-fetch dayjs dotenv openai
+        run: |
+          npm install
+          npm install openai rss-parser fs-extra node-fetch dayjs dotenv
 
       - name: Run cyber post generator
         run: node tools/auto-cyber-posting/generate-daily-cve-post.js
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Commit & push
         run: |
           git config user.name "sleep33-bot"
-          git add _posts
+          git config user.email "bot@sleep33.dev"
+          git add .  # Add all files (including new files like package.json)
           git commit -m "🛡️ Auto CVE post"
           git push
