@@ -3,6 +3,7 @@
 # Import the theme
 theme: jekyll-theme-chirpy
 favicon: /assets/images/favicon-.ico
+
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
@@ -19,7 +20,7 @@ title: Sleep33 # the main title
 tagline: Every noob has a story – Walkthroughs from a growing hacker. # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  The journey of a junior hacker – walkthroughs, writeups, and cybersecurity tips.
+  The journey of a hacker – walkthroughs, writeups, and cybersecurity tips.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.

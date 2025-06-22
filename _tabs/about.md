@@ -3,17 +3,16 @@
 icon: fas fa-info-circle
 order: 4
 ---
-# ![whois logo](https://who.is/static/images/whois-logo.svg)
 
 ## OrgName: Yuval!
 
 ### Welcome to My Cybersecurity Blog
 
-I’m a **Junior Penetration Tester** and an enthusiastic **cybersecurity student**.
+I’m a **Penetration Tester** and a dedicated **cybersecurity enthusiast** constantly on the lookout for the next big vulnerability. This blog is my digital **trophy case**—a place where I document my journey through **CTF challenges** on **TryHackMe**, **Bug Bounty** findings, and my take on real-world **security weaknesses** shaking up the industry.
 
-I created this blog to document my journey in the cybersecurity field, sharing *writeups* and *walkthroughs* of rooms I’ve completed on platforms like **TryHackMe** and **HackTheBox**.
+Expect detailed *writeups* of the rooms I’ve conquered, analysis of the latest **bug bounty** targets I’ve exploited, and insights into the vulnerabilities making headlines. If you're into breaking things (ethically, of course), this blog’s for you.
 
-You’ll also find **study guides**, tips, and insights on various topics related to ethical hacking and penetration testing.
+Join me as I dive into the digital depths, share a laugh (or two), and hopefully make the internet a safer place, one bug at a time.
 
 ---
 
