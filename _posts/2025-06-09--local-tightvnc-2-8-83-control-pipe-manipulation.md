@@ -11,7 +11,7 @@ image:
 
 ## Summary
 
-TightVNC 2.8.83 - Control Pipe Manipulation
+TightVNC 2.8.83 - Control Pipe Manipulation.
 
 ## Technical Analysis
 
