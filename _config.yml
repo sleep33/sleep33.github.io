@@ -2,7 +2,7 @@
 
 # Import the theme
 theme: jekyll-theme-chirpy
-
+favicon: /assets/images/favicon-.ico
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
@@ -38,11 +38,11 @@ social:
   #email: example@domain.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/the_sleep33 # change to your Twitter homepage
+    # - https://twitter.com/the_sleep33 # change to your Twitter homepage
     - https://github.com/sleep33 # change to your GitHub homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://www.linkedin.com/in/yuvaluzan
 
 # Site Verification Settings
 webmaster_verifications:
