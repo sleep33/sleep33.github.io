@@ -4,7 +4,7 @@ date: 2025-06-10
 categories: [Hacking Blog]
 tags: [vulnerability, exploit, offensive-security]
 layout: post
-image: ./assets/images/post-cover/ABB-Cylon-Aspect-3.08.04 DeploySource.png
+image: assets/images/post-cover/ABB-Cylon-Aspect-3.08.04-DeploySource.png
 ---
 
 ## Summary
