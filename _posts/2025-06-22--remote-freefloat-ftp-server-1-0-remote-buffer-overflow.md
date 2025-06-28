@@ -1,7 +1,7 @@
 ---
 title: "[remote] Freefloat FTP Server 1.0 - Remote Buffer Overflow"
 date: 2025-06-22
-categories: [Cyber Blog]
+categories: [Hacking Blog]
 tags: [vulnerability, exploit, offensive-security, Freefloat, FTP Server]
 layout: post
 image: ./assets/images/post-cover/FreefloatFTPServer1_0exploit.png
