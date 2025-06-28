@@ -4,8 +4,7 @@ date: 2025-06-22
 categories: [Cyber Blog]
 tags: [vulnerability, exploit, offensive-security, Freefloat, FTP Server]
 layout: post
-image:
-  path: ./assets/images/post-cover/Freefloat FTP Server 1.0-exploit.png
+image: ./assets/images/post-cover/FreefloatFTPServer1_0exploit.png
 ---
 
 ## Summary

@@ -4,8 +4,7 @@ date: 2025-06-05
 categories: [Hacking Blog]
 tags: [vulnerability, exploit, offensive-security, Grandstream]
 layout: post
-image:
-  path: ./assets/images/post-cover/grandstream-GSD3710.png
+image: ./assets/images/post-cover/grandstream-GSD3710.png
 ---
 
 ## Summary
