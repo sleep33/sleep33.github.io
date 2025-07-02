@@ -48,8 +48,8 @@ Stuxnet operated silently in air-gapped environments for **over a year**, exploi
 **Objective:** Delay Iran’s enrichment program without triggering open war.  
 **Method:** Exploit trust in industrial systems. Attack via logic, not explosives.
 
-![Natanz nuclear site](https://upload.wikimedia.org/wikipedia/commons/d/d4/Natanz_nuclear.jpg)  
-*Image credit: Wikipedia / CC BY-SA 3.0*
+![Natanz nuclear site](/assets/images/stuxnet-blog/Natanz-nuclear-site.png)  
+*This image was recreated using Sora and is inspired by publicly available content on Wikipedia (licensed under CC BY-SA 3.0).*
 
 ---
 
@@ -128,8 +128,8 @@ Objectives:
 2. Spoof sensors to hide real values  
 3. Cause long-term physical degradation  
 
-![Stuxnet modifying PLC](https://upload.wikimedia.org/wikipedia/commons/6/6e/Stuxnet_modifying_plc.svg)  
-*Image credit: Wikipedia*
+![Stuxnet modifying PLC](/assets/images/stuxnet-blog/stuxnet_modifying_plc.png)  
+*Image source: Wikimedia Commons / Author: Zubro / License: CC BY-SA 3.0
 
 ---
 
@@ -148,9 +148,8 @@ Used hijacked libraries:
 
 - `S7COMM.dll`  
 - `s7otbxdx.dll`  
-
-![Step7 communicating with PLC](https://upload.wikimedia.org/wikipedia/commons/b/bf/Step7_communicating_with_plc.svg)  
-*Image credit: Wikipedia*
+![Step7 communicating with PLC](/assets/images/stuxnet-blog/Step7_communicating_with_plc.png)  
+*Image source: Wikimedia Commons / Author: Zubro / License: CC BY-SA 3.0
 
 ---
 
